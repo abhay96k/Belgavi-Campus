@@ -1,0 +1,2846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Belagavi Campus College Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #05080f;
+    --surface: #0d1320;
+    --surface2: #131b2e;
+    --gold: #f0b429;
+    --gold2: #ffd166;
+    --accent: #00d4ff;
+    --accent2: #7b61ff;
+    --green: #06d6a0;
+    --red: #ef476f;
+    --text: #e8eaf0;
+    --muted: #6b7897;
+    --border: rgba(240,180,41,0.15);
+    --glow: 0 0 40px rgba(240,180,41,0.15);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ---- SCROLLBAR ---- */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 4px; }
+
+  /* ---- NOISE TEXTURE ---- */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* ---- NAV ---- */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    height: 68px;
+    background: rgba(5,8,15,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .nav-logo .emblem {
+    width: 38px; height: 38px;
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    color: #05080f;
+    font-weight: 900;
+  }
+
+  .nav-logo span {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+  }
+
+  .nav-logo span em {
+    display: block;
+    font-style: normal;
+    color: var(--gold);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    font-weight: 600;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--gold); }
+
+  .nav-btn {
+    background: var(--gold);
+    color: #05080f;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .nav-btn:hover { background: var(--gold2); transform: translateY(-1px); }
+
+  /* ---- HAMBURGER MENU ---- */
+  .menu-btn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 42px; height: 42px;
+    background: rgba(240,180,41,0.08);
+    border: 1px solid rgba(240,180,41,0.25);
+    border-radius: 10px;
+    cursor: pointer;
+    padding: 10px;
+    transition: all 0.25s;
+    flex-shrink: 0;
+  }
+  .menu-btn:hover { background: rgba(240,180,41,0.18); border-color: var(--gold); transform: translateY(-1px); }
+  .menu-btn.open { background: var(--gold); border-color: var(--gold); }
+  .menu-btn.open .bar { background: #05080f; }
+  .bar {
+    display: block; width: 100%; height: 2px;
+    background: var(--gold); border-radius: 2px;
+    transition: all 0.3s; transform-origin: center;
+  }
+  .menu-btn.open .bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .menu-btn.open .bar:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .menu-btn.open .bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .menu-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.65);
+    backdrop-filter: blur(6px);
+    z-index: 1100;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.35s;
+  }
+  .menu-overlay.open { opacity: 1; pointer-events: all; }
+
+  .menu-drawer {
+    position: fixed; top: 0; right: 0;
+    width: 320px; height: 100vh;
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    z-index: 1200;
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+    display: flex; flex-direction: column; overflow-y: auto;
+  }
+  .menu-drawer.open { transform: translateX(0); }
+
+  .drawer-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 24px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+  }
+  .drawer-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 16px; letter-spacing: 0.05em; }
+  .drawer-title span { color: var(--gold); }
+  .drawer-close {
+    width: 34px; height: 34px; border-radius: 8px;
+    background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+    color: var(--muted); font-size: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+  }
+  .drawer-close:hover { background: rgba(239,71,111,0.15); color: var(--red); border-color: var(--red); }
+
+  .drawer-section-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--muted); padding: 20px 24px 10px;
+  }
+
+  .drawer-nav { list-style: none; padding: 0 12px; display: flex; flex-direction: column; gap: 2px; }
+  .drawer-nav li a {
+    display: flex; align-items: center; gap: 14px;
+    padding: 13px 14px; border-radius: 10px;
+    text-decoration: none; color: var(--text);
+    font-size: 14px; font-weight: 500; transition: all 0.2s;
+  }
+  .drawer-nav li a:hover { background: rgba(240,180,41,0.07); color: var(--gold); padding-left: 20px; }
+  .drawer-nav li a .nav-icon {
+    width: 34px; height: 34px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0; transition: all 0.2s;
+  }
+  .drawer-nav li a:hover .nav-icon { transform: scale(1.15); }
+  .drawer-nav li a .nav-label { flex: 1; }
+  .drawer-nav li a .nav-arrow { font-size: 11px; color: var(--muted); opacity: 0; transform: translateX(-6px); transition: all 0.2s; }
+  .drawer-nav li a:hover .nav-arrow { opacity: 1; transform: translateX(0); }
+
+  .drawer-divider { height: 1px; background: var(--border); margin: 12px 24px; }
+
+  .drawer-footer { margin-top: auto; padding: 20px 24px; border-top: 1px solid var(--border); flex-shrink: 0; }
+  .drawer-footer-info { font-size: 11px; color: var(--muted); line-height: 1.6; text-align: center; }
+  .drawer-footer-info strong { color: var(--gold); display: block; margin-bottom: 4px; font-size: 12px; }
+
+  /* ---- HERO ---- */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 100px 40px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(240,180,41,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(240,180,41,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .hero-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+  }
+
+  .orb1 { width: 600px; height: 600px; top: -200px; left: -150px; background: radial-gradient(circle, rgba(240,180,41,0.12) 0%, transparent 70%); }
+  .orb2 { width: 500px; height: 500px; bottom: -100px; right: -100px; background: radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 70%); }
+  .orb3 { width: 400px; height: 400px; top: 50%; left: 50%; transform: translate(-50%,-50%); background: radial-gradient(circle, rgba(123,97,255,0.06) 0%, transparent 70%); }
+
+  .hero-content {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(240,180,41,0.1);
+    border: 1px solid rgba(240,180,41,0.3);
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    margin-bottom: 32px;
+    text-transform: uppercase;
+    animation: fadeDown 0.8s ease both;
+  }
+
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.5)} }
+
+  .hero h1 {
+    margin-bottom: 12px;
+    animation: fadeUp 0.8s 0.1s ease both;
+    position: relative;
+    line-height: 1.15;
+  }
+
+  /* Line 1: "Welcome to the" */
+  .hero h1 .welcome-line {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(16px, 2vw, 24px);
+    color: rgba(232,234,240,0.5);
+    letter-spacing: 0.22em;
+    margin-bottom: 4px;
+    line-height: 1.4;
+  }
+
+  /* Line 2: "College Portal" — inline, medium size */
+  .hero h1 .title-line {
+    display: block;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(42px, 7vw, 86px);
+    line-height: 1;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+  }
+
+  .hero h1 .title-line .word-college {
+    background: linear-gradient(135deg, #ffffff 0%, #f0b429 45%, #ffd166 70%, #fff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 2px 16px rgba(240,180,41,0.3));
+    margin-right: 0.08em;
+  }
+
+  .hero h1 .title-line .word-portal {
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 1.5px rgba(240,180,41,0.75);
+  }
+
+  /* Decorative divider */
+  .hero-h1-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin: 10px 0 8px;
+    animation: fadeUp 0.8s 0.15s ease both;
+  }
+
+  .hero-h1-divider .line {
+    height: 1px;
+    width: 64px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  .hero-h1-divider .dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 10px var(--gold);
+    animation: pulse 2s infinite;
+  }
+
+  .hero-sub {
+    color: var(--muted);
+    font-size: 16px;
+    max-width: 560px;
+    margin: 24px auto 48px;
+    line-height: 1.7;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    color: #05080f;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+  }
+
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 20px 40px rgba(240,180,41,0.3); }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+  }
+
+  .btn-secondary:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-3px); }
+
+  /* HERO STATS STRIP */
+  .hero-stats {
+    display: flex;
+    gap: 0;
+    justify-content: center;
+    margin-top: 64px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    animation: fadeUp 0.8s 0.4s ease both;
+    background: rgba(13,19,32,0.8);
+    backdrop-filter: blur(20px);
+  }
+
+  .hero-stat {
+    flex: 1;
+    padding: 24px 32px;
+    text-align: center;
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+
+  .hero-stat:last-child { border-right: none; }
+
+  .hero-stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .hero-stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* ---- SECTIONS COMMON ---- */
+  section { padding: 100px 40px; }
+
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .section-label::before {
+    content: '';
+    width: 24px; height: 2px;
+    background: var(--gold);
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  .section-desc {
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 520px;
+    line-height: 1.7;
+  }
+
+  .container { max-width: 1300px; margin: 0 auto; }
+
+  /* ---- RANKINGS SECTION ---- */
+  #rankings { background: var(--surface); }
+
+  .rank-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 48px;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .filter-tabs {
+    display: flex;
+    gap: 8px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 4px;
+  }
+
+  .filter-tab {
+    padding: 8px 18px;
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    transition: all 0.2s;
+  }
+
+  .filter-tab.active {
+    background: var(--gold);
+    color: #05080f;
+  }
+
+  .rankings-table {
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .rankings-table-header {
+    display: grid;
+    grid-template-columns: 60px 1fr 120px 120px 120px 120px;
+    gap: 16px;
+    padding: 16px 24px;
+    background: rgba(240,180,41,0.08);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .rankings-table-header span {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .rank-row {
+    display: grid;
+    grid-template-columns: 60px 1fr 120px 120px 120px 120px;
+    gap: 16px;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+    transition: background 0.2s;
+    cursor: pointer;
+  }
+
+  .rank-row:last-child { border-bottom: none; }
+  .rank-row:hover { background: rgba(240,180,41,0.04); }
+
+  .rank-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: var(--muted);
+  }
+
+  .rank-row:nth-child(1) .rank-num { color: var(--gold); }
+  .rank-row:nth-child(2) .rank-num { color: #C0C0C0; }
+  .rank-row:nth-child(3) .rank-num { color: #CD7F32; }
+
+  .college-info { display: flex; align-items: center; gap: 16px; }
+
+  .college-logo {
+    width: 48px; height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    font-weight: 900;
+    flex-shrink: 0;
+  }
+
+  .college-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; }
+  .college-type { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  .rank-score {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+  }
+
+  .score-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .score-bar {
+    flex: 1;
+    height: 4px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .score-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--gold), var(--gold2));
+    transition: width 1s ease;
+  }
+
+  .badge-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .badge-green { background: rgba(6,214,160,0.12); color: var(--green); }
+  .badge-gold { background: rgba(240,180,41,0.12); color: var(--gold); }
+  .badge-blue { background: rgba(0,212,255,0.12); color: var(--accent); }
+  .badge-purple { background: rgba(123,97,255,0.12); color: var(--accent2); }
+  .badge-red { background: rgba(239,71,111,0.12); color: var(--red); }
+
+  /* ---- COMPARISON SECTION ---- */
+  #comparison { background: var(--bg); }
+
+  .comparison-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+    margin-top: 48px;
+  }
+
+  .comparison-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+
+  .comparison-card:hover {
+    border-color: rgba(240,180,41,0.4);
+    transform: translateY(-4px);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.4), var(--glow);
+  }
+
+  .comparison-card.featured {
+    border-color: var(--gold);
+    background: linear-gradient(135deg, rgba(240,180,41,0.05), var(--surface));
+  }
+
+  .comparison-card.featured::before {
+    content: '⭐ TOP COLLEGE';
+    position: absolute;
+    top: 16px; right: -20px;
+    background: var(--gold);
+    color: #05080f;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    padding: 4px 36px 4px 16px;
+    transform: rotate(0deg);
+  }
+
+  .comp-rank {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .comp-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    margin-bottom: 6px;
+  }
+
+  .comp-type {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+
+  .comp-metrics { display: flex; flex-direction: column; gap: 14px; }
+
+  .comp-metric {}
+
+  .comp-metric-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    margin-bottom: 6px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .comp-metric-value { font-weight: 700; color: var(--text); }
+
+  .comp-bar {
+    height: 6px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .comp-bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 1.2s ease;
+  }
+
+  /* ---- RESULTS SECTION ---- */
+  #results { background: var(--surface); }
+
+  .results-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-top: 48px;
+  }
+
+  .result-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    transition: all 0.3s;
+  }
+
+  .result-card:hover { border-color: rgba(240,180,41,0.3); transform: translateY(-2px); }
+
+  .result-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+  }
+
+  .result-college-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+  }
+
+  .result-year {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    margin-top: 3px;
+  }
+
+  .result-big-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 64px;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .result-label {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    margin-bottom: 20px;
+  }
+
+  .result-breakdown {
+    display: flex;
+    gap: 16px;
+  }
+
+  .result-breakdown-item {
+    flex: 1;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+  }
+
+  .rbi-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px; }
+  .rbi-label { font-size: 10px; color: var(--muted); font-weight: 600; letter-spacing: 0.1em; margin-top: 2px; }
+
+  /* ---- EVENTS ---- */
+  #events { background: var(--bg); }
+
+  .events-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 48px;
+  }
+
+  .event-card {
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+
+  .event-card:hover { transform: translateY(-6px); box-shadow: 0 30px 60px rgba(0,0,0,0.5); }
+
+  .event-img {
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 64px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .event-img::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(13,19,32,0.9));
+  }
+
+  .event-body { padding: 20px; }
+
+  .event-date {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .event-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  .event-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  .event-college {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  /* ---- PLACEMENT ---- */
+  #placement { background: var(--surface); }
+
+  .placement-hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+    margin-top: 48px;
+  }
+
+  .placement-chart-wrap {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px;
+  }
+
+  .placement-chart-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 24px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  .placement-bar-chart { display: flex; flex-direction: column; gap: 16px; }
+
+  .pl-bar-row { display: flex; align-items: center; gap: 12px; }
+
+  .pl-college-name {
+    font-size: 12px;
+    font-weight: 600;
+    width: 140px;
+    flex-shrink: 0;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .pl-bar-track {
+    flex: 1;
+    height: 28px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .pl-bar-fill {
+    height: 100%;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    padding-left: 12px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #05080f;
+    transition: width 1.5s ease;
+    min-width: 50px;
+  }
+
+  .placement-stats { display: flex; flex-direction: column; gap: 24px; }
+
+  .pl-stat-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: all 0.3s;
+  }
+
+  .pl-stat-card:hover { border-color: rgba(240,180,41,0.3); }
+
+  .pl-stat-icon {
+    width: 52px; height: 52px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+
+  .pl-stat-body .pl-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .pl-stat-body .pl-desc { font-size: 13px; color: var(--muted); }
+
+  /* ---- BRANCHES ---- */
+  #branches { background: var(--bg); }
+
+  .branches-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-top: 48px;
+  }
+
+  .branch-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 24px;
+    transition: all 0.3s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .branch-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .branch-card:hover::before { opacity: 1; }
+  .branch-card:hover { transform: translateY(-4px); border-color: rgba(240,180,41,0.3); }
+
+  .branch-icon { font-size: 36px; margin-bottom: 16px; }
+
+  .branch-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 8px;
+  }
+
+  .branch-count { font-size: 12px; color: var(--muted); }
+
+  .branch-colleges {
+    margin-top: 16px;
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+
+  .branch-college-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    opacity: 0.4;
+  }
+
+  /* ---- SPORTS ---- */
+  #sports { background: var(--surface); }
+
+  .sports-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 48px;
+  }
+
+  .sport-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    text-align: center;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+
+  .sport-card:hover { border-color: rgba(240,180,41,0.3); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+
+  .sport-icon { font-size: 48px; margin-bottom: 16px; }
+
+  .sport-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+
+  .sport-champion {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .sport-champion strong { color: var(--gold); font-weight: 600; }
+
+  .sport-medals {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .sport-medal { text-align: center; }
+  .sport-medal-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+  }
+
+  .sport-medal-label { font-size: 10px; color: var(--muted); font-weight: 600; letter-spacing: 0.1em; }
+
+  /* ---- STUDENTS ---- */
+  #students { background: var(--bg); }
+
+  .students-controls {
+    display: flex;
+    gap: 16px;
+    margin-top: 48px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+
+  .search-box {
+    flex: 1;
+    min-width: 240px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+  }
+
+  .search-box input {
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    flex: 1;
+  }
+
+  .search-box input::placeholder { color: var(--muted); }
+
+  .select-filter {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .students-table {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .student-table-header {
+    display: grid;
+    grid-template-columns: 60px 1fr 160px 140px 100px 120px;
+    gap: 16px;
+    padding: 14px 24px;
+    background: rgba(240,180,41,0.06);
+    border-bottom: 1px solid var(--border);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .student-row {
+    display: grid;
+    grid-template-columns: 60px 1fr 160px 140px 100px 120px;
+    gap: 16px;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+    transition: background 0.2s;
+  }
+
+  .student-row:last-child { border-bottom: none; }
+  .student-row:hover { background: rgba(255,255,255,0.02); }
+
+  .student-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Syne', sans-serif;
+    color: #05080f;
+    flex-shrink: 0;
+  }
+
+  .student-info { display: flex; align-items: center; gap: 12px; }
+  .student-name { font-family: 'Syne', sans-serif; font-weight: 600; font-size: 14px; }
+  .student-id { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .student-college { font-size: 13px; color: var(--muted); }
+  .student-branch { font-size: 13px; }
+  .student-cgpa { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; }
+
+  /* ---- FUNCTIONS ---- */
+  #functions { background: var(--surface); }
+
+  .functions-timeline {
+    margin-top: 48px;
+    position: relative;
+    padding-left: 40px;
+  }
+
+  .functions-timeline::before {
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, var(--gold), transparent);
+  }
+
+  .function-item {
+    position: relative;
+    margin-bottom: 40px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 32px;
+    transition: all 0.3s;
+  }
+
+  .function-item:hover { border-color: rgba(240,180,41,0.3); transform: translateX(4px); }
+
+  .function-item::before {
+    content: '';
+    position: absolute;
+    left: -34px;
+    top: 32px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--gold);
+    border: 3px solid var(--bg);
+    box-shadow: 0 0 0 2px var(--gold);
+  }
+
+  .function-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .function-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+  }
+
+  .function-meta {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 12px;
+    font-size: 12px;
+    color: var(--muted);
+    flex-wrap: wrap;
+  }
+
+  .function-meta span { display: flex; align-items: center; gap: 6px; }
+
+  .function-desc { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+  /* ---- FOOTER ---- */
+  footer {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 60px 40px 30px;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px;
+    max-width: 1300px;
+    margin: 0 auto;
+    margin-bottom: 48px;
+  }
+
+  .footer-brand p { color: var(--muted); font-size: 13px; line-height: 1.7; margin-top: 16px; max-width: 260px; }
+
+  .footer-col h4 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+    color: var(--gold);
+  }
+
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer-col ul a { color: var(--muted); text-decoration: none; font-size: 13px; transition: color 0.2s; }
+  .footer-col ul a:hover { color: var(--text); }
+
+  .footer-bottom {
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1300px;
+    margin: 0 auto;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* ---- ANIMATIONS ---- */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* Mobile */
+  @media (max-width: 900px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    section { padding: 60px 20px; }
+    .hero { padding: 90px 20px 40px; }
+    .hero h1 { font-size: 56px; }
+    .hero-stats { display: grid; grid-template-columns: 1fr 1fr; border-radius: 12px; }
+    .hero-stat { border-right: none; border-bottom: 1px solid var(--border); }
+    .hero-stat:last-child, .hero-stat:nth-child(2n) { border-bottom: none; }
+    .rankings-table-header, .rank-row { grid-template-columns: 48px 1fr 80px 80px; }
+    .rankings-table-header span:nth-child(5), .rankings-table-header span:nth-child(6),
+    .rank-row > *:nth-child(5), .rank-row > *:nth-child(6) { display: none; }
+    .comparison-grid { grid-template-columns: 1fr; }
+    .results-grid { grid-template-columns: 1fr; }
+    .events-grid { grid-template-columns: 1fr; }
+    .placement-hero { grid-template-columns: 1fr; }
+    .branches-grid { grid-template-columns: 1fr 1fr; }
+    .sports-grid { grid-template-columns: 1fr 1fr; }
+    .student-table-header, .student-row { grid-template-columns: 40px 1fr 100px 80px; }
+    .student-table-header span:nth-child(5), .student-table-header span:nth-child(6),
+    .student-row > *:nth-child(5), .student-row > *:nth-child(6) { display: none; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ---- TOPPERS SECTION ---- */
+  #toppers { background: var(--bg); position: relative; overflow: hidden; }
+
+  .toppers-bg-text {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(100px, 20vw, 260px);
+    color: rgba(240,180,41,0.03);
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+    letter-spacing: 0.05em;
+  }
+
+  /* District Podium */
+  .district-podium {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 0;
+    margin: 48px auto 64px;
+    max-width: 900px;
+    position: relative;
+  }
+
+  .podium-slot {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    position: relative;
+  }
+
+  .podium-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px 20px 0 0;
+    padding: 28px 20px 32px;
+    text-align: center;
+    width: 100%;
+    position: relative;
+    transition: all 0.4s;
+  }
+
+  .podium-slot:nth-child(1) .podium-card { border-color: rgba(192,192,192,0.4); }
+  .podium-slot:nth-child(2) .podium-card {
+    border-color: var(--gold);
+    background: linear-gradient(135deg, rgba(240,180,41,0.08), var(--surface));
+    transform: translateY(-28px);
+    box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 60px rgba(240,180,41,0.15);
+  }
+  .podium-slot:nth-child(3) .podium-card { border-color: rgba(205,127,50,0.4); }
+
+  .podium-crown {
+    position: absolute;
+    top: -22px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 28px;
+    filter: drop-shadow(0 4px 12px rgba(240,180,41,0.6));
+  }
+
+  .podium-avatar {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 24px;
+    margin: 0 auto 16px;
+    border: 3px solid;
+    position: relative;
+  }
+
+  .podium-slot:nth-child(2) .podium-avatar {
+    width: 88px; height: 88px;
+    font-size: 28px;
+    border-color: var(--gold);
+    box-shadow: 0 0 30px rgba(240,180,41,0.3);
+  }
+
+  .podium-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+
+  .podium-slot:nth-child(2) .podium-name { font-size: 20px; color: var(--gold); }
+
+  .podium-college {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+
+  .podium-cgpa {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+
+  .podium-slot:nth-child(2) .podium-cgpa { font-size: 48px; color: var(--gold); }
+
+  .podium-cgpa-label { font-size: 10px; color: var(--muted); font-weight: 600; letter-spacing: 0.15em; }
+
+  .podium-branch {
+    margin-top: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .podium-base {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 0.1em;
+    border-radius: 0 0 8px 8px;
+  }
+
+  .podium-slot:nth-child(1) .podium-base { background: rgba(192,192,192,0.15); color: #C0C0C0; height: 60px; }
+  .podium-slot:nth-child(2) .podium-base { background: linear-gradient(135deg, rgba(240,180,41,0.2), rgba(255,209,102,0.15)); color: var(--gold); height: 90px; }
+  .podium-slot:nth-child(3) .podium-base { background: rgba(205,127,50,0.12); color: #CD7F32; height: 44px; }
+
+  /* Live ticker strip */
+  .live-ticker-strip {
+    background: linear-gradient(90deg, rgba(240,180,41,0.12), rgba(0,212,255,0.08), rgba(240,180,41,0.12));
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 48px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .live-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(239,71,111,0.15);
+    border: 1px solid rgba(239,71,111,0.3);
+    padding: 5px 12px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--red);
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .live-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--red);
+    animation: pulse 1.2s infinite;
+  }
+
+  .ticker-track-wrap {
+    flex: 1;
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent, black 5%, black 95%, transparent);
+  }
+
+  .ticker-track {
+    display: flex;
+    gap: 48px;
+    white-space: nowrap;
+    animation: ticker 28s linear infinite;
+  }
+
+  .ticker-track:hover { animation-play-state: paused; }
+
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .ticker-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .ticker-rank {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    color: var(--gold);
+    min-width: 28px;
+  }
+
+  .ticker-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; }
+  .ticker-college { font-size: 11px; color: var(--muted); }
+  .ticker-cgpa {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    color: var(--green);
+    margin-left: 6px;
+  }
+
+  .ticker-sep {
+    color: var(--border);
+    font-size: 20px;
+    opacity: 0.5;
+  }
+
+  /* College Toppers Grid */
+  .college-toppers-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .college-toppers-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+  }
+
+  .college-toppers-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .college-topper-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+
+  .college-topper-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    transition: opacity 0.3s;
+    opacity: 0.7;
+  }
+
+  .college-topper-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(240,180,41,0.35);
+    box-shadow: 0 24px 48px rgba(0,0,0,0.4);
+  }
+
+  .ctc-college-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .ctc-college-logo {
+    width: 40px; height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    font-weight: 900;
+    flex-shrink: 0;
+  }
+
+  .ctc-college-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+    line-height: 1.3;
+    letter-spacing: 0.03em;
+  }
+
+  .ctc-rank-badge {
+    margin-left: auto;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    padding: 4px 10px;
+    border-radius: 100px;
+    white-space: nowrap;
+  }
+
+  .ctc-topper-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .ctc-topper-row:last-child { border-bottom: none; }
+
+  .ctc-pos {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    width: 24px;
+    flex-shrink: 0;
+    text-align: center;
+  }
+
+  .ctc-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .ctc-info { flex: 1; min-width: 0; }
+  .ctc-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ctc-branch { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  .ctc-score {
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .ctc-cgpa {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    line-height: 1;
+  }
+
+  .ctc-year { font-size: 10px; color: var(--muted); font-weight: 600; letter-spacing: 0.1em; margin-top: 1px; }
+
+  /* Responsive toppers */
+  @media (max-width: 900px) {
+    .district-podium { flex-direction: column; align-items: center; gap: 16px; }
+    .podium-slot:nth-child(2) .podium-card { transform: none; }
+    .podium-base { border-radius: 0 0 8px 8px !important; height: 44px !important; }
+    .college-toppers-grid { grid-template-columns: 1fr; }
+  }
+
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="emblem">BCP</div>
+    <span>Belagavi Campus<em>College Portal</em></span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#rankings">Rankings</a></li>
+    <li><a href="#comparison">Compare</a></li>
+    <li><a href="#results">Results</a></li>
+    <li><a href="#events">Events</a></li>
+    <li><a href="#placement">Placement</a></li>
+    <li><a href="#branches">Branches</a></li>
+    <li><a href="#sports">Sports</a></li>
+    <li><a href="#students">Students</a></li>
+    <li><a href="#functions">Functions</a></li>
+    <li><a href="#toppers">Toppers</a></li>
+  </ul>
+  <!-- Hamburger Button -->
+  <button class="menu-btn" id="menuBtn" onclick="toggleMenu()" aria-label="Open menu">
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+  </button>
+</nav>
+
+<!-- Overlay -->
+<div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+
+<!-- Slide-out Drawer -->
+<div class="menu-drawer" id="menuDrawer">
+  <div class="drawer-header">
+    <div class="drawer-title">Navigate <span>Portal</span></div>
+    <button class="drawer-close" onclick="closeMenu()">✕</button>
+  </div>
+
+  <div class="drawer-section-label">Main Sections</div>
+  <ul class="drawer-nav">
+    <li><a href="#home" onclick="closeMenu()">
+      <span class="nav-icon" style="background:rgba(240,180,41,0.12)">🏠</span>
+      <span class="nav-label">Home</span>
+      <span class="nav-arrow">→</span>
+    </a></li>
+    <li><a href="#rankings" onclick="closeMenu()">
+      <span class="nav-icon" style="background:rgba(240,180,41,0.12)">🏆</span>
+      <span class="nav-label">College Rankings</span>
+      <span class="nav-arrow">→</span>
+    </a></li>
+    <li><a href="#comparison" onclick="closeMenu()">
+      <span class="nav-icon" style="background:rgba(0,212,255,0.12)">📊</span>
+      <span class="nav-label">Compare Colleges</span>
+      <span class="nav-arrow">→</span>
+    </a></li>
+    <li><a href="#results" onclick="closeMenu()">
+      <span class="nav-icon" style="background:rgba(6,214,160,0.12)">📋</span>
+      <span class="nav-label">Exam Results</span>
+      <span class="nav-arrow">→</span>
+    </a></li>
+    <li><a href="#events" onclick="closeMenu()">
+      <span class="nav-icon" style="background:rgba(123,97,255,0.12)">🎪</span>
+      <span class="nav-label">Events & Fests</span>
+      <span class="nav-arrow">→</span>
+    </a></li>
+  </ul>
+
+  <div class="drawer-divider"></div>
+  <div class="drawer-section-label">Academics & Career</div>
+  <ul class="drawer-nav">
+    <li><a href="#placement" onclick="closeMenu()">
+      <span class="nav-icon" style="background:rgba(239,71,111,0.12)">💼</span>
+      <span class="nav-label">Placement Stats</span>
+      <span class="nav-arrow">→</span>
+    </a></li>
+    <li><a href="#branches" onclick="closeMenu()">
+      <span class="nav-icon" style="background:rgba(255,209,102,0.12)">🌿</span>
+      <span class="nav-label">Branches & Depts</span>
+      <span class="nav-arrow">→</span>
+    </a></li>
+    <li><a href="#toppers" onclick="closeMenu()">
+      <span class="nav-icon" style="background:rgba(240,180,41,0.15)">🥇</span>
+      <span class="nav-label">Toppers</span>
+      <span class="nav-arrow">→</span>
+    </a></li>
+    <li><a href="#students" onclick="closeMenu()">
+      <span class="nav-icon" style="background:rgba(0,212,255,0.12)">👥</span>
+      <span class="nav-label">Student Directory</span>
+      <span class="nav-arrow">→</span>
+    </a></li>
+  </ul>
+
+  <div class="drawer-divider"></div>
+  <div class="drawer-section-label">Campus Life</div>
+  <ul class="drawer-nav">
+    <li><a href="#sports" onclick="closeMenu()">
+      <span class="nav-icon" style="background:rgba(6,214,160,0.12)">🏅</span>
+      <span class="nav-label">Sports & Athletics</span>
+      <span class="nav-arrow">→</span>
+    </a></li>
+    <li><a href="#functions" onclick="closeMenu()">
+      <span class="nav-icon" style="background:rgba(123,97,255,0.12)">🎓</span>
+      <span class="nav-label">College Functions</span>
+      <span class="nav-arrow">→</span>
+    </a></li>
+  </ul>
+
+  <div class="drawer-footer">
+    <div class="drawer-footer-info">
+      <strong>Belagavi Campus Portal</strong>
+      12 Colleges · Karnataka · India<br>
+      Data updated: June 2024
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-orb orb1"></div>
+  <div class="hero-orb orb2"></div>
+  <div class="hero-orb orb3"></div>
+  <div class="hero-content">
+    <div class="hero-badge">🏛️ &nbsp; Belagavi Campus · Karnataka · India</div>
+    <h1>
+      <span class="welcome-line">✦ &nbsp; Welcome to the &nbsp; ✦</span>
+      <span class="title-line">
+        <span class="word-college">College</span><span class="word-portal">Portal</span>
+      </span>
+    </h1>
+    <div class="hero-h1-divider">
+      <div class="line"></div>
+      <div class="dot"></div>
+      <div class="line"></div>
+    </div>
+    <p class="hero-sub">All-in-one platform for engineering college rankings, results, placements, events, sports, and student data across every institution in Belagavi Campus.</p>
+    <div class="hero-actions">
+      <a href="#rankings" class="btn-primary">View Rankings</a>
+      <a href="#comparison" class="btn-secondary">Compare Colleges</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num" data-count="12">0</div>
+        <div class="hero-stat-label">Colleges</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" data-count="52,000">0</div>
+        <div class="hero-stat-label">Students Enrolled</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" data-count="81">0</div>
+        <div class="hero-stat-label">Avg Placement %</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" data-count="148">0</div>
+        <div class="hero-stat-label">Courses Offered</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RANKINGS -->
+<section id="rankings">
+  <div class="container">
+    <div class="rank-header reveal">
+      <div>
+        <div class="section-label">Campus Rankings</div>
+        <h2 class="section-title">Top Colleges in<br><span style="color:var(--gold)">Belagavi Campus</span></h2>
+        <p class="section-desc">Ranked by composite score: academics, placement, infrastructure, sports & research output.</p>
+      </div>
+      <div class="filter-tabs">
+        <button class="filter-tab active" onclick="setFilter(this,'all')">All</button>
+        <button class="filter-tab" onclick="setFilter(this,'engineering')">Engineering</button>
+        <button class="filter-tab" onclick="setFilter(this,'university')">University</button>
+      </div>
+    </div>
+    <div class="rankings-table reveal" id="rankingsTable">
+      <div class="rankings-table-header">
+        <span>Rank</span>
+        <span>College</span>
+        <span>Score</span>
+        <span>Placement %</span>
+        <span>Results</span>
+        <span>Status</span>
+      </div>
+      <!-- Rows injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON -->
+<section id="comparison">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">College Comparison</div>
+      <h2 class="section-title">Side-by-Side<br><span style="color:var(--gold)">Analysis</span></h2>
+      <p class="section-desc">Compare top colleges across key performance metrics to make the right choice.</p>
+    </div>
+    <div class="comparison-grid reveal" id="comparisonGrid">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section id="results">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Examination Results</div>
+      <h2 class="section-title">Annual Results<br><span style="color:var(--gold)">2023–2024</span></h2>
+      <p class="section-desc">University examination results across all affiliated colleges in the district.</p>
+    </div>
+    <div class="results-grid reveal" id="resultsGrid">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- EVENTS -->
+<section id="events">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Upcoming & Recent Events</div>
+      <h2 class="section-title">College Events &<br><span style="color:var(--gold)">Activities</span></h2>
+      <p class="section-desc">Fests, seminars, workshops, cultural events and more from across the district.</p>
+    </div>
+    <div class="events-grid reveal" id="eventsGrid">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- PLACEMENT -->
+<section id="placement">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Placement Statistics</div>
+      <h2 class="section-title">Placement Performance<br><span style="color:var(--gold)">2023–24</span></h2>
+      <p class="section-desc">Comprehensive placement data including package, sector, and company-wise breakdowns.</p>
+    </div>
+    <div class="placement-hero reveal">
+      <div class="placement-chart-wrap">
+        <div class="placement-chart-title">COLLEGE-WISE PLACEMENT %</div>
+        <div class="placement-bar-chart" id="placementChart"></div>
+      </div>
+      <div class="placement-stats" id="placementStats"></div>
+    </div>
+  </div>
+</section>
+
+<!-- BRANCHES -->
+<section id="branches">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Branches & Departments</div>
+      <h2 class="section-title">Available<br><span style="color:var(--gold)">Streams</span></h2>
+      <p class="section-desc">Engineering branches and specializations offered across all 12 institutions in Belagavi Campus.</p>
+    </div>
+    <div class="branches-grid reveal" id="branchesGrid"></div>
+  </div>
+</section>
+
+<!-- SPORTS -->
+<section id="sports">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Sports & Athletics</div>
+      <h2 class="section-title">Campus Sports<br><span style="color:var(--gold)">Champions</span></h2>
+      <p class="section-desc">Tracking inter-college sports achievements, tournaments and medals won.</p>
+    </div>
+    <div class="sports-grid reveal" id="sportsGrid"></div>
+  </div>
+</section>
+
+<!-- STUDENTS -->
+<section id="students">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Student Directory</div>
+      <h2 class="section-title">Student<br><span style="color:var(--gold)">Listings</span></h2>
+      <p class="section-desc">Search and browse enrolled students across all district colleges.</p>
+    </div>
+    <div class="students-controls reveal">
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" id="studentSearch" placeholder="Search by name or ID..." oninput="filterStudents()">
+      </div>
+      <select class="select-filter" id="collegeFilter" onchange="filterStudents()">
+        <option value="">All Colleges</option>
+        <option>KLS Gogte Institute of Technology (GIT)</option>
+        <option>KLE Technological University – Sheshgiri Campus</option>
+        <option>Jain College of Engineering (JCE)</option>
+        <option>SG Balekundri Institute of Technology (SGBIT)</option>
+        <option>Angadi Institute of Technology and Management (AITM)</option>
+        <option>Maratha Mandal Engineering College (MMEC)</option>
+        <option>Jain College of Engineering and Research (JCER)</option>
+        <option>Shaikh College of Engineering and Technology (SCET)</option>
+        <option>VSM Institute of Technology (VSMIT)</option>
+        <option>Hirasugar Institute of Technology (HIT)</option>
+        <option>KLE College of Engg and Technology, Chikodi</option>
+        <option>Visvesvaraya Technological University (VTU)</option>
+      </select>
+      <select class="select-filter" id="branchFilter" onchange="filterStudents()">
+        <option value="">All Branches</option>
+        <option>CSE</option>
+        <option>ECE</option>
+        <option>ME</option>
+        <option>Civil</option>
+        <option>EEE</option>
+        <option>ISE</option>
+        <option>AI/ML</option>
+        <option>Chemical</option>
+      </select>
+    </div>
+    <div class="students-table reveal">
+      <div class="student-table-header">
+        <span>#</span>
+        <span>Student</span>
+        <span>College</span>
+        <span>Branch</span>
+        <span>CGPA</span>
+        <span>Status</span>
+      </div>
+      <div id="studentsBody"></div>
+    </div>
+  </div>
+</section>
+
+<!-- FUNCTIONS -->
+<section id="functions">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">College Functions</div>
+      <h2 class="section-title">Annual<br><span style="color:var(--gold)">Functions</span></h2>
+      <p class="section-desc">Convocations, annual days, cultural fests, technical symposiums and institutional celebrations.</p>
+    </div>
+    <div class="functions-timeline reveal" id="functionsTimeline"></div>
+  </div>
+</section>
+
+
+<!-- TOPPERS -->
+<section id="toppers">
+  <div class="toppers-bg-text">TOPPERS</div>
+  <div class="container">
+
+    <!-- District Toppers Header -->
+    <div class="reveal">
+      <div class="section-label">🏆 Live Rankings</div>
+      <h2 class="section-title">District<br><span style="color:var(--gold)">Toppers</span></h2>
+      <p class="section-desc">Top performers from all 12 Belagavi Campus colleges ranked by CGPA for the current academic year 2023–24.</p>
+    </div>
+
+    <!-- Live Ticker -->
+    <div class="live-ticker-strip reveal" id="topperTicker">
+      <div class="live-badge"><div class="live-dot"></div>LIVE</div>
+      <div class="ticker-track-wrap">
+        <div class="ticker-track" id="tickerTrack">
+          <!-- injected by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Podium: Top 3 District Toppers -->
+    <div class="district-podium reveal" id="districtPodium">
+      <!-- injected by JS -->
+    </div>
+
+    <!-- All District Toppers List -->
+    <div class="reveal" style="margin-bottom:48px">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden">
+        <div style="display:grid;grid-template-columns:56px 1fr 180px 140px 100px 120px;gap:16px;padding:14px 24px;background:rgba(240,180,41,0.06);border-bottom:1px solid var(--border);font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted)">
+          <span>Rank</span><span>Student</span><span>College</span><span>Branch</span><span>CGPA</span><span>Award</span>
+        </div>
+        <div id="districtToppersList"></div>
+      </div>
+    </div>
+
+    <!-- College-wise Toppers -->
+    <div class="reveal">
+      <div class="college-toppers-header">
+        <div>
+          <div class="section-label" style="margin-bottom:8px">Per-College Rankings</div>
+          <div class="college-toppers-title">College-wise Top 3 Students</div>
+        </div>
+        <div class="filter-tabs">
+          <button class="filter-tab active" onclick="filterCollegeToppers(this,'all')">All Colleges</button>
+          <button class="filter-tab" onclick="filterCollegeToppers(this,'cse')">CSE / ISE</button>
+          <button class="filter-tab" onclick="filterCollegeToppers(this,'ece')">ECE / EEE</button>
+          <button class="filter-tab" onclick="filterCollegeToppers(this,'me')">ME / Civil</button>
+        </div>
+      </div>
+      <div class="college-toppers-grid" id="collegeTopperGrid"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="nav-logo">
+        <div class="emblem">BCP</div>
+        <span>Belagavi Campus<em>College Portal</em></span>
+      </div>
+      <p>The official digital platform for engineering college rankings, results, placements, and student data across all 12 institutions in Belagavi Campus, Karnataka.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="#rankings">College Rankings</a></li>
+        <li><a href="#comparison">Compare Colleges</a></li>
+        <li><a href="#results">Results</a></li>
+        <li><a href="#placement">Placements</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Academics</h4>
+      <ul>
+        <li><a href="#branches">Branches</a></li>
+        <li><a href="#events">Events</a></li>
+        <li><a href="#functions">Functions</a></li>
+        <li><a href="#sports">Sports</a></li>
+        <li><a href="#toppers">Toppers</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Campus</h4>
+      <ul>
+        <li><a href="#">VTU Affiliated</a></li>
+        <li><a href="#">UOM Affiliated</a></li>
+        <li><a href="#">Government Colleges</a></li>
+        <li><a href="#">Contact / Feedback</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 Belagavi Campus College Portal. All rights reserved.</span>
+    <span>Data updated: June 2024</span>
+  </div>
+</footer>
+
+<script>
+/* ===================== DATA ===================== */
+const colleges = [
+  { id:1,  name:"KLS Gogte Institute of Technology (GIT)",              short:"GIT",   type:"Engineering", score:95.1, placement:91, results:89, color:"#f0b429", category:"engineering" },
+  { id:2,  name:"KLE Technological University – Sheshgiri Campus",      short:"KLETU", type:"Engineering", score:93.2, placement:90, results:88, color:"#00d4ff", category:"engineering" },
+  { id:3,  name:"Jain College of Engineering (JCE)",                    short:"JCE",   type:"Engineering", score:90.5, placement:86, results:86, color:"#06d6a0", category:"engineering" },
+  { id:4,  name:"SG Balekundri Institute of Technology (SGBIT)",        short:"SGBIT", type:"Engineering", score:88.1, placement:84, results:85, color:"#7b61ff", category:"engineering" },
+  { id:5,  name:"Angadi Institute of Technology and Management (AITM)", short:"AITM",  type:"Engineering", score:85.9, placement:82, results:84, color:"#ef476f", category:"engineering" },
+  { id:6,  name:"Maratha Mandal Engineering College (MMEC)",            short:"MMEC",  type:"Engineering", score:83.4, placement:80, results:83, color:"#ffd166", category:"engineering" },
+  { id:7,  name:"Jain College of Engineering and Research (JCER)",      short:"JCER",  type:"Engineering", score:81.2, placement:78, results:82, color:"#f0b429", category:"engineering" },
+  { id:8,  name:"Shaikh College of Engineering and Technology (SCET)",  short:"SCET",  type:"Engineering", score:78.6, placement:75, results:80, color:"#00d4ff", category:"engineering" },
+  { id:9,  name:"VSM Institute of Technology (VSMIT)",                  short:"VSMIT", type:"Engineering", score:76.3, placement:72, results:79, color:"#06d6a0", category:"engineering" },
+  { id:10, name:"Hirasugar Institute of Technology (HIT)",              short:"HIT",   type:"Engineering", score:74.8, placement:70, results:78, color:"#7b61ff", category:"engineering" },
+  { id:11, name:"KLE College of Engg and Technology, Chikodi",          short:"KLECT", type:"Engineering", score:72.5, placement:68, results:77, color:"#ef476f", category:"engineering" },
+  { id:12, name:"Visvesvaraya Technological University (VTU)",          short:"VTU",   type:"University",  score:98.0, placement:95, results:93, color:"#ffd166", category:"university" },
+];
+
+const students = [
+  { id:"BG2021CS001", name:"Aarav Kumar",       college:"KLS Gogte Institute of Technology (GIT)",             branch:"CSE",   cgpa:9.5, status:"Active",  color:"#f0b429" },
+  { id:"BG2021EC042", name:"Priya Sharma",      college:"KLE Technological University – Sheshgiri Campus",     branch:"ECE",   cgpa:9.2, status:"Active",  color:"#00d4ff" },
+  { id:"BG2022CS010", name:"Ravi Gowda",        college:"Jain College of Engineering (JCE)",                   branch:"CSE",   cgpa:8.9, status:"Active",  color:"#06d6a0" },
+  { id:"BG2020EC033", name:"Sneha Patil",       college:"SG Balekundri Institute of Technology (SGBIT)",       branch:"ECE",   cgpa:8.7, status:"Active",  color:"#7b61ff" },
+  { id:"BG2021ME088", name:"Kiran Desai",       college:"Angadi Institute of Technology and Management (AITM)",branch:"ME",    cgpa:8.4, status:"Active",  color:"#ef476f" },
+  { id:"BG2022CI021", name:"Divya Chougule",    college:"Maratha Mandal Engineering College (MMEC)",           branch:"Civil", cgpa:8.1, status:"Active",  color:"#ffd166" },
+  { id:"BG2021CS067", name:"Suresh Naik",       college:"Jain College of Engineering and Research (JCER)",     branch:"CSE",   cgpa:7.9, status:"Active",  color:"#f0b429" },
+  { id:"BG2020ME034", name:"Meena Biradar",     college:"Shaikh College of Engineering and Technology (SCET)", branch:"ME",    cgpa:7.7, status:"Active",  color:"#00d4ff" },
+  { id:"BG2022EC099", name:"Arjun Reddy",       college:"VSM Institute of Technology (VSMIT)",                 branch:"ECE",   cgpa:8.2, status:"Active",  color:"#06d6a0" },
+  { id:"BG2021CS011", name:"Lakshmi Devi",      college:"Hirasugar Institute of Technology (HIT)",             branch:"CSE",   cgpa:7.5, status:"Active",  color:"#7b61ff" },
+  { id:"BG2023ME004", name:"Vikram Mulimani",   college:"KLE College of Engg and Technology, Chikodi",         branch:"ME",    cgpa:7.8, status:"Active",  color:"#ef476f" },
+  { id:"BG2020CS055", name:"Ananya Iyer",       college:"Visvesvaraya Technological University (VTU)",         branch:"CSE",   cgpa:9.8, status:"Alumni",  color:"#ffd166" },
+  { id:"BG2022CI012", name:"Rahul Patil",       college:"KLS Gogte Institute of Technology (GIT)",             branch:"Civil", cgpa:8.6, status:"Active",  color:"#f0b429" },
+  { id:"BG2021EC044", name:"Savita Kulkarni",   college:"SG Balekundri Institute of Technology (SGBIT)",       branch:"ECE",   cgpa:8.0, status:"Active",  color:"#7b61ff" },
+  { id:"BG2023CS008", name:"Manjunath Kori",    college:"Angadi Institute of Technology and Management (AITM)",branch:"CSE",   cgpa:7.6, status:"Active",  color:"#ef476f" },
+  { id:"BG2022IS009", name:"Pooja Kamble",      college:"KLS Gogte Institute of Technology (GIT)",             branch:"ISE",   cgpa:9.1, status:"Active",  color:"#f0b429" },
+  { id:"BG2021EE015", name:"Deepak Kulkarni",   college:"SG Balekundri Institute of Technology (SGBIT)",       branch:"EEE",   cgpa:8.3, status:"Active",  color:"#7b61ff" },
+  { id:"BG2023CS044", name:"Aishwarya Naik",    college:"Jain College of Engineering (JCE)",                   branch:"AI/ML", cgpa:9.0, status:"Active",  color:"#06d6a0" },
+];
+
+const events = [
+  { emoji:"🎪", color:"rgba(240,180,41,0.12)", date:"AUG 15 – 17, 2024", title:"GIT Techfest 2024",           desc:"National-level technical fest at KLS Gogte with hackathons, robotics competitions, paper presentations and cultural nights.", college:"KLS Gogte Institute of Technology (GIT)", type:"Technical Fest" },
+  { emoji:"🎭", color:"rgba(0,212,255,0.12)", date:"SEP 5, 2024",              title:"SGBIT Cultural Fiesta 2024",  desc:"Inter-college cultural competition at SGBIT featuring dance, music, drama, fine arts and literary events.", college:"SG Balekundri Inst of Technology (SGBIT)", type:"Cultural" },
+  { emoji:"🏆", color:"rgba(6,214,160,0.12)", date:"SEP 22 – 24, 2024",   title:"Belagavi Campus Sports Meet", desc:"Annual inter-college sports championship covering 15 disciplines with 1,200+ student athletes from all 12 colleges.", college:"All 12 Colleges", type:"Sports" },
+  { emoji:"🎓", color:"rgba(123,97,255,0.12)", date:"OCT 10, 2024",             title:"VTU Convocation 2024",        desc:"VTU annual convocation ceremony for graduates of the 2023-24 batch from all Belagavi affiliated colleges.", college:"Visvesvaraya Technological University (VTU)", type:"Academic" },
+  { emoji:"💼", color:"rgba(239,71,111,0.12)", date:"NOV 3 – 5, 2024",    title:"Mega Placement Drive 2024",   desc:"Joint campus recruitment drive with 150+ companies at AITM & KLETU targeting CSE, ECE, ME and management students.", college:"AITM & KLE Tech University", type:"Placement" },
+  { emoji:"🔬", color:"rgba(255,209,102,0.12)", date:"NOV 20, 2024",            title:"JCER Research Symposium",     desc:"Annual research paper presentation and poster expo with industry & academic panel from Belagavi institutions.", college:"Jain College of Engg and Research (JCER)", type:"Academic" },
+];
+
+const branches = [
+  { icon:"💻", name:"Computer Science & Engineering", colleges:12, count:6800 },
+  { icon:"📡", name:"Electronics & Communication Engg.", colleges:11, count:5400 },
+  { icon:"⚙️", name:"Mechanical Engineering", colleges:10, count:4800 },
+  { icon:"🏗️", name:"Civil Engineering", colleges:9, count:3900 },
+  { icon:"⚡", name:"Electrical & Electronics Engg.", colleges:8, count:3200 },
+  { icon:"🤖", name:"Artificial Intelligence & ML", colleges:7, count:2600 },
+  { icon:"🔬", name:"Information Science & Engg.", colleges:8, count:2900 },
+  { icon:"🧪", name:"Chemical Engineering", colleges:4, count:1200 },
+  { icon:"🛠️", name:"Industrial & Production Engg.", colleges:5, count:1400 },
+  { icon:"🏭", name:"Instrumentation Technology", colleges:4, count:900 },
+  { icon:"🌐", name:"Computer Networks & Security", colleges:6, count:1800 },
+  { icon:"⚗️", name:"Bio-Medical Engineering", colleges:3, count:700 },
+];
+
+const sports = [
+  { icon:"🏏", name:"Cricket",    champion:"KLS Gogte Institute of Technology (GIT)",         gold:5, silver:4, bronze:3 },
+  { icon:"⚽",     name:"Football",   champion:"SG Balekundri Inst of Technology (SGBIT)",        gold:4, silver:3, bronze:5 },
+  { icon:"🏀", name:"Basketball", champion:"Jain College of Engineering (JCE)",               gold:3, silver:4, bronze:4 },
+  { icon:"🏸", name:"Badminton",  champion:"Maratha Mandal Engineering College (MMEC)",       gold:3, silver:2, bronze:6 },
+  { icon:"🏊", name:"Swimming",   champion:"KLE Technological University – Sheshgiri Campus", gold:2, silver:5, bronze:3 },
+  { icon:"🥊", name:"Athletics",  champion:"Hirasugar Institute of Technology (HIT)",         gold:4, silver:5, bronze:7 },
+];
+
+const functions_ = [
+  { title:"VTU Convocation 2024",              date:"March 18, 2024",   college:"Visvesvaraya Technological University (VTU)",          type:"Academic",  desc:"Annual VTU convocation for 14,000+ graduating students across all affiliated Belagavi colleges. Chief Guest: Dr. S. Sadagopan, IIIT Bangalore.", badge:"badge-gold" },
+  { title:"GIT Annual Day 2024",               date:"February 5, 2024", college:"KLS Gogte Institute of Technology (GIT)",              type:"Cultural",  desc:"Annual Day celebration at GIT featuring alumni felicitation, cultural performances and awards for academic and sports excellence.", badge:"badge-green" },
+  { title:"KLETU Industry Connect Summit",     date:"January 22, 2024", college:"KLE Technological University – Sheshgiri Campus",      type:"Career",    desc:"Two-day summit connecting 200+ industry leaders with KLETU students on emerging technologies, startup ecosystem and future careers.", badge:"badge-blue" },
+  { title:"SGBIT Freshers' Welcome 2023",      date:"October 12, 2023", college:"SG Balekundri Institute of Technology (SGBIT)",        type:"Social",    desc:"Grand freshers' welcome with cultural events, talent shows and orientation programs for 1,000+ new students joining SGBIT.", badge:"badge-purple" },
+  { title:"MMEC National Technical Symposium", date:"February 28, 2024",college:"Maratha Mandal Engineering College (MMEC)",            type:"Academic",  desc:"National-level technical symposium with paper presentations, workshops and keynotes from IIT & NIT faculty.", badge:"badge-blue" },
+  { title:"HIT Annual Day Celebrations",       date:"March 5, 2024",    college:"Hirasugar Institute of Technology (HIT)",              type:"Cultural",  desc:"Annual Day featuring cultural performances, sports awards and felicitation of academic toppers and achievers.", badge:"badge-green" },
+  { title:"JCER Research Expo 2024",           date:"April 8, 2024",    college:"Jain College of Engineering and Research (JCER)",      type:"Academic",  desc:"Research expo showcasing student and faculty innovations with live demos, poster sessions and industry panel reviews.", badge:"badge-blue" },
+  { title:"SCET Foundation Day",               date:"April 25, 2024",   college:"Shaikh College of Engineering and Technology (SCET)",  type:"Cultural",  desc:"Foundation Day celebration with cultural events, alumni talks and prize distribution for academic and co-curricular excellence.", badge:"badge-purple" },
+  { title:"KLE Chikodi Engineering Fest",      date:"May 2, 2024",      college:"KLE College of Engg and Technology, Chikodi",          type:"Technical", desc:"Annual engineering festival with project exhibitions, technical quizzes and workshops for students from North Karnataka.", badge:"badge-gold" },
+];
+
+const placementData = [
+  { name:"VTU",          pct:95, color:"#ffd166" },
+  { name:"GIT (KLS Gogte)",     pct:91, color:"#f0b429" },
+  { name:"KLETU Sheshgiri",     pct:90, color:"#00d4ff" },
+  { name:"JCE",                 pct:86, color:"#06d6a0" },
+  { name:"SGBIT",               pct:84, color:"#7b61ff" },
+  { name:"AITM",                pct:82, color:"#ef476f" },
+  { name:"MMEC",                pct:80, color:"#ffd166" },
+  { name:"JCER",                pct:78, color:"#f0b429" },
+  { name:"SCET",                pct:75, color:"#00d4ff" },
+  { name:"VSMIT",               pct:72, color:"#06d6a0" },
+  { name:"HIT",                 pct:70, color:"#7b61ff" },
+  { name:"KLE CET Chikodi",     pct:68, color:"#ef476f" },
+];
+
+const placementStats = [
+  { icon:"💰", bg:"rgba(240,180,41,0.12)", num:"₹18.6 LPA", desc:"Highest package offered (GIT – Infosys BPM | KLETU – TCS)", color:"#f0b429" },
+  { icon:"📊", bg:"rgba(0,212,255,0.12)", num:"82%", desc:"Average placement rate across all 12 Belagavi Campus colleges", color:"#00d4ff" },
+  { icon:"🏢", bg:"rgba(6,214,160,0.12)", num:"280+", desc:"Recruiting companies participated in campus drives", color:"#06d6a0" },
+  { icon:"⭐", bg:"rgba(123,97,255,0.12)", num:"₹6.4 LPA", desc:"Average package across all placed students", color:"#7b61ff" },
+];
+
+const resultsData = [
+  { college:"KLS Gogte Inst of Technology (GIT)",         year:"2023-24", pass:89, first:63, second:26, fail:11, color:"#f0b429" },
+  { college:"KLE Technological Univ – Sheshgiri Campus",  year:"2023-24", pass:88, first:60, second:28, fail:12, color:"#00d4ff" },
+  { college:"Jain College of Engineering (JCE)",          year:"2023-24", pass:86, first:55, second:31, fail:14, color:"#06d6a0" },
+  { college:"SG Balekundri Inst of Technology (SGBIT)",   year:"2023-24", pass:85, first:52, second:33, fail:15, color:"#7b61ff" },
+  { college:"Angadi Inst of Technology and Mgmt (AITM)",  year:"2023-24", pass:84, first:50, second:34, fail:16, color:"#ef476f" },
+  { college:"Maratha Mandal Engineering College (MMEC)",  year:"2023-24", pass:83, first:49, second:34, fail:17, color:"#ffd166" },
+  { college:"Jain College of Engg and Research (JCER)",   year:"2023-24", pass:82, first:47, second:35, fail:18, color:"#f0b429" },
+  { college:"Shaikh College of Engg and Tech (SCET)",     year:"2023-24", pass:80, first:44, second:36, fail:20, color:"#00d4ff" },
+  { college:"VSM Institute of Technology (VSMIT)",        year:"2023-24", pass:79, first:42, second:37, fail:21, color:"#06d6a0" },
+  { college:"Hirasugar Institute of Technology (HIT)",    year:"2023-24", pass:78, first:40, second:38, fail:22, color:"#7b61ff" },
+  { college:"KLE CET, Chikodi",                           year:"2023-24", pass:77, first:39, second:38, fail:23, color:"#ef476f" },
+  { college:"Visvesvaraya Technological University (VTU)",year:"2023-24", pass:93, first:70, second:23, fail:7,  color:"#ffd166" },
+];
+
+/* ===================== RENDER FUNCTIONS ===================== */
+let activeFilter = 'all';
+let allStudents = [...students];
+
+function renderRankings(filter='all') {
+  const filtered = filter === 'all' ? colleges : colleges.filter(c => c.category === filter);
+  const t = document.getElementById('rankingsTable');
+  const header = t.querySelector('.rankings-table-header');
+  t.innerHTML = '';
+  t.appendChild(header);
+  filtered.forEach((c, i) => {
+    const row = document.createElement('div');
+    row.className = 'rank-row';
+    const statusBadge = i === 0 ? `<span class="badge-tag badge-gold">🏆 Top College</span>` :
+      c.placement > 85 ? `<span class="badge-tag badge-green">✅ Excellent</span>` :
+      c.placement > 75 ? `<span class="badge-tag badge-blue">⬆ Good</span>` :
+      `<span class="badge-tag badge-purple">📈 Growing</span>`;
+    row.innerHTML = `
+      <div class="rank-num">${(i+1).toString().padStart(2,'0')}</div>
+      <div class="college-info">
+        <div class="college-logo" style="background:${c.color}22;color:${c.color}">${c.short}</div>
+        <div>
+          <div class="college-name">${c.name}</div>
+          <div class="college-type">${c.type}</div>
+        </div>
+      </div>
+      <div>
+        <div class="rank-score" style="color:${c.color}">${c.score}</div>
+        <div class="score-bar-wrap" style="margin-top:4px">
+          <div class="score-bar"><div class="score-bar-fill" style="width:${c.score}%;background:${c.color}"></div></div>
+        </div>
+      </div>
+      <div class="rank-score">${c.placement}%</div>
+      <div class="rank-score">${c.results}%</div>
+      <div>${statusBadge}</div>
+    `;
+    t.appendChild(row);
+  });
+}
+
+function setFilter(btn, filter) {
+  document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderRankings(filter);
+}
+
+function renderComparison() {
+  const top3 = colleges.slice(0,3);
+  const grid = document.getElementById('comparisonGrid');
+  const metrics = [
+    { label:"Academic Score", key:"score", max:100 },
+    { label:"Placement Rate", key:"placement", max:100 },
+    { label:"Result Pass %", key:"results", max:100 },
+  ];
+  grid.innerHTML = top3.map((c, i) => `
+    <div class="comparison-card ${i===0?'featured':''}">
+      ${i===0?`<div style="position:absolute;top:16px;right:0;background:var(--gold);color:#05080f;font-size:10px;font-weight:800;letter-spacing:0.1em;padding:5px 16px 5px 12px">⭐ CAMPUS TOPPER</div>`:''}
+      <div class="comp-rank">RANK #${i+1}</div>
+      <div class="comp-name">${c.name}</div>
+      <div class="comp-type">${c.type}</div>
+      <div class="comp-metrics">
+        ${metrics.map(m => `
+          <div class="comp-metric">
+            <div class="comp-metric-label"><span>${m.label}</span><span class="comp-metric-value">${c[m.key]}${m.key!=='score'?'%':''}</span></div>
+            <div class="comp-bar"><div class="comp-bar-fill" style="width:${(c[m.key]/m.max)*100}%;background:${c.color}"></div></div>
+          </div>
+        `).join('')}
+        <div style="margin-top:8px;padding-top:16px;border-top:1px solid var(--border)">
+          <div style="font-size:12px;color:var(--muted);margin-bottom:8px">OVERALL RANK SCORE</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:48px;color:${c.color};line-height:1">${c.score}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderResults() {
+  const grid = document.getElementById('resultsGrid');
+  grid.innerHTML = resultsData.map(r => `
+    <div class="result-card">
+      <div class="result-card-header">
+        <div>
+          <div class="result-college-name">${r.college}</div>
+          <div class="result-year">Academic Year ${r.year}</div>
+        </div>
+        <span class="badge-tag badge-green">✅ Published</span>
+      </div>
+      <div class="result-big-num" style="color:${r.color}">${r.pass}%</div>
+      <div class="result-label">OVERALL PASS PERCENTAGE</div>
+      <div class="result-breakdown">
+        <div class="result-breakdown-item">
+          <div class="rbi-num" style="color:${r.color}">${r.first}%</div>
+          <div class="rbi-label">First Class</div>
+        </div>
+        <div class="result-breakdown-item">
+          <div class="rbi-num" style="color:var(--accent)">${r.second}%</div>
+          <div class="rbi-label">Second Class</div>
+        </div>
+        <div class="result-breakdown-item">
+          <div class="rbi-num" style="color:var(--red)">${r.fail}%</div>
+          <div class="rbi-label">Fail</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderEvents() {
+  const grid = document.getElementById('eventsGrid');
+  grid.innerHTML = events.map(e => `
+    <div class="event-card">
+      <div class="event-img" style="background:${e.color}">${e.emoji}</div>
+      <div class="event-body">
+        <div class="event-date">📅 ${e.date}</div>
+        <div class="event-title">${e.title}</div>
+        <div class="event-desc">${e.desc}</div>
+        <div class="event-college">
+          <span class="badge-tag badge-blue">${e.type}</span>
+          <span>🏛️ ${e.college}</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderPlacement() {
+  const chart = document.getElementById('placementChart');
+  chart.innerHTML = placementData.map(p => `
+    <div class="pl-bar-row">
+      <div class="pl-college-name" title="${p.name}">${p.name}</div>
+      <div class="pl-bar-track">
+        <div class="pl-bar-fill" style="width:${p.pct}%;background:${p.color}">${p.pct}%</div>
+      </div>
+    </div>
+  `).join('');
+
+  const stats = document.getElementById('placementStats');
+  stats.innerHTML = placementStats.map(s => `
+    <div class="pl-stat-card">
+      <div class="pl-stat-icon" style="background:${s.bg};font-size:28px">${s.icon}</div>
+      <div class="pl-stat-body">
+        <div class="pl-num" style="color:${s.color}">${s.num}</div>
+        <div class="pl-desc">${s.desc}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderBranches() {
+  const grid = document.getElementById('branchesGrid');
+  const colors = ['#f0b429','#00d4ff','#06d6a0','#7b61ff','#ef476f','#ffd166','#f0b429','#00d4ff','#06d6a0','#7b61ff','#ef476f','#ffd166'];
+  grid.innerHTML = branches.map((b, i) => `
+    <div class="branch-card" style="--bc:${colors[i]}">
+      <style>.branch-card:nth-child(${i+1})::before{background:${colors[i]};}</style>
+      <div class="branch-icon">${b.icon}</div>
+      <div class="branch-name">${b.name}</div>
+      <div class="branch-count" style="color:${colors[i]}">${b.count.toLocaleString()} Students · ${b.colleges} Colleges</div>
+      <div class="branch-colleges">${Array(b.colleges).fill(0).map((_,j)=>`<div class="branch-college-dot" style="background:${colors[i]};opacity:${0.3+j*0.06}"></div>`).join('')}</div>
+    </div>
+  `).join('');
+}
+
+function renderSports() {
+  const grid = document.getElementById('sportsGrid');
+  const colors = ['#f0b429','#00d4ff','#7b61ff','#06d6a0','#ef476f','#ffd166'];
+  grid.innerHTML = sports.map((s, i) => `
+    <div class="sport-card">
+      <div class="sport-icon">${s.icon}</div>
+      <div class="sport-name">${s.name}</div>
+      <div class="sport-champion">🏆 Campus Champion: <strong>${s.champion}</strong></div>
+      <div class="sport-medals">
+        <div class="sport-medal">
+          <div class="sport-medal-num" style="color:#FFD700">${s.gold}</div>
+          <div class="sport-medal-label">Gold</div>
+        </div>
+        <div class="sport-medal">
+          <div class="sport-medal-num" style="color:#C0C0C0">${s.silver}</div>
+          <div class="sport-medal-label">Silver</div>
+        </div>
+        <div class="sport-medal">
+          <div class="sport-medal-num" style="color:#CD7F32">${s.bronze}</div>
+          <div class="sport-medal-label">Bronze</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderStudents(list) {
+  const body = document.getElementById('studentsBody');
+  body.innerHTML = list.map((s, i) => `
+    <div class="student-row">
+      <div style="color:var(--muted);font-size:13px;font-weight:600">${(i+1).toString().padStart(2,'0')}</div>
+      <div class="student-info">
+        <div class="student-avatar" style="background:${s.color}22;color:${s.color}">${s.name.split(' ').map(n=>n[0]).join('')}</div>
+        <div>
+          <div class="student-name">${s.name}</div>
+          <div class="student-id">${s.id}</div>
+        </div>
+      </div>
+      <div class="student-college">${s.college}</div>
+      <div class="student-branch"><span class="badge-tag badge-blue">${s.branch}</span></div>
+      <div class="student-cgpa" style="color:${s.cgpa>=9?'var(--green)':s.cgpa>=8?'var(--gold)':'var(--text)'}">${s.cgpa}</div>
+      <div><span class="badge-tag ${s.status==='Active'?'badge-green':'badge-purple'}">${s.status}</span></div>
+    </div>
+  `).join('');
+}
+
+function filterStudents() {
+  const q = document.getElementById('studentSearch').value.toLowerCase();
+  const col = document.getElementById('collegeFilter').value;
+  const br = document.getElementById('branchFilter').value;
+  const filtered = students.filter(s =>
+    (s.name.toLowerCase().includes(q) || s.id.toLowerCase().includes(q)) &&
+    (!col || s.college === col) &&
+    (!br || s.branch === br)
+  );
+  renderStudents(filtered);
+}
+
+function renderFunctions() {
+  const tl = document.getElementById('functionsTimeline');
+  tl.innerHTML = functions_.map(f => `
+    <div class="function-item">
+      <div class="function-top">
+        <div class="function-title">${f.title}</div>
+        <span class="badge-tag ${f.badge}">${f.type}</span>
+      </div>
+      <div class="function-meta">
+        <span>📅 ${f.date}</span>
+        <span>🏛️ ${f.college}</span>
+      </div>
+      <div class="function-desc">${f.desc}</div>
+    </div>
+  `).join('');
+}
+
+/* ===================== COUNTER ANIMATION ===================== */
+function animateCounter(el, targetStr) {
+  const hasComma = targetStr.includes(',');
+  const hasPct = targetStr.includes('%');
+  const numStr = targetStr.replace(/,/g,'').replace('%','');
+  const target = parseFloat(numStr);
+  let start = null;
+  const duration = 2000;
+  function step(ts) {
+    if (!start) start = ts;
+    const p = Math.min((ts - start)/duration, 1);
+    const eased = 1 - Math.pow(1-p, 3);
+    const current = Math.floor(eased * target);
+    let display = current.toString();
+    if (hasComma && current > 999) {
+      display = current.toLocaleString('en-IN');
+    }
+    if (hasPct) display += '%';
+    el.textContent = display;
+    if (p < 1) requestAnimationFrame(step);
+    else el.textContent = targetStr;
+  }
+  requestAnimationFrame(step);
+}
+
+/* ===================== INTERSECTION OBSERVER ===================== */
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+/* Counter observer */
+const counterIO = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const els = e.target.querySelectorAll('[data-count]');
+      els.forEach(el => {
+        animateCounter(el, el.dataset.count);
+        el.removeAttribute('data-count');
+      });
+      counterIO.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+
+const heroStats = document.querySelector('.hero-stats');
+if (heroStats) counterIO.observe(heroStats);
+
+/* ===================== MENU ===================== */
+function toggleMenu() {
+  const btn = document.getElementById('menuBtn');
+  const drawer = document.getElementById('menuDrawer');
+  const overlay = document.getElementById('menuOverlay');
+  const isOpen = drawer.classList.contains('open');
+  if (isOpen) {
+    closeMenu();
+  } else {
+    btn.classList.add('open');
+    drawer.classList.add('open');
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeMenu() {
+  document.getElementById('menuBtn').classList.remove('open');
+  document.getElementById('menuDrawer').classList.remove('open');
+  document.getElementById('menuOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Close on Escape key
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+
+/* ===================== INIT ===================== */
+renderRankings();
+renderComparison();
+renderResults();
+renderEvents();
+renderPlacement();
+renderBranches();
+renderSports();
+renderStudents(students);
+renderFunctions();
+
+/* ===================== TOPPERS DATA ===================== */
+const districtToppers = [
+  { rank:1,  name:"Kiran Patel",       college:"GIT",   collegeFull:"KLS Gogte Inst of Technology", branch:"CSE",   cgpa:9.8, year:"4th Year", color:"#f0b429", award:"🥇 District Gold" },
+  { rank:2,  name:"Pooja Kamble",      college:"AITM",  collegeFull:"Angadi Inst of Tech & Mgmt",   branch:"CSE",   cgpa:9.7, year:"3rd Year", color:"#ef476f", award:"🥈 District Silver" },
+  { rank:3,  name:"Vikram Singh",      college:"VTU",   collegeFull:"Visvesvaraya Tech University", branch:"ECE",   cgpa:9.6, year:"Final Year", color:"#ffd166", award:"🥉 District Bronze" },
+  { rank:4,  name:"Aarav Kumar",       college:"GIT",   collegeFull:"KLS Gogte Inst of Technology", branch:"CSE",   cgpa:9.5, year:"3rd Year", color:"#f0b429", award:"⭐ Excellence" },
+  { rank:5,  name:"Priya Sharma",      college:"KLETU", collegeFull:"KLE Tech Univ – Sheshgiri",    branch:"ECE",   cgpa:9.4, year:"4th Year", color:"#00d4ff", award:"⭐ Excellence" },
+  { rank:6,  name:"Deepak Kulkarni",   college:"SGBIT", collegeFull:"SG Balekundri Inst of Tech",   branch:"ECE",   cgpa:9.3, year:"3rd Year", color:"#7b61ff", award:"⭐ Excellence" },
+  { rank:7,  name:"Ananya Iyer",       college:"SGBIT", collegeFull:"SG Balekundri Inst of Tech",   branch:"CSE",   cgpa:9.2, year:"Alumni",   color:"#7b61ff", award:"🎓 Alumni Star" },
+  { rank:8,  name:"Savita Desai",      college:"GIT",   collegeFull:"KLS Gogte Inst of Technology", branch:"CSE",   cgpa:9.1, year:"4th Year", color:"#f0b429", award:"⭐ Excellence" },
+  { rank:9,  name:"Ravi Gowda",        college:"JCE",   collegeFull:"Jain College of Engineering",  branch:"ME",    cgpa:9.0, year:"4th Year", color:"#06d6a0", award:"🔧 Best ME" },
+  { rank:10, name:"Meena Kumari",      college:"SCET",  collegeFull:"Shaikh Coll of Engg & Tech",   branch:"Civil", cgpa:8.9, year:"4th Year", color:"#00d4ff", award:"🏗️ Best Civil" },
+  { rank:11, name:"Sneha Nair",        college:"AITM",  collegeFull:"Angadi Inst of Tech & Mgmt",   branch:"ECE",   cgpa:8.8, year:"3rd Year", color:"#ef476f", award:"📡 Best ECE" },
+  { rank:12, name:"Rahul Patil",       college:"VTU",   collegeFull:"Visvesvaraya Tech University", branch:"Civil", cgpa:8.7, year:"3rd Year", color:"#ffd166", award:"⭐ Excellence" },
+];
+
+const collegeToppers = [
+  {
+    college:"KLS Gogte Institute of Technology", abbr:"GIT", color:"#f0b429",
+    toppers:[
+      { name:"Kiran Patel",     branch:"CSE",   cgpa:9.8, year:"4th Year" },
+      { name:"Savita Desai",    branch:"CSE",   cgpa:9.1, year:"4th Year" },
+      { name:"Aarav Kumar",     branch:"CSE",   cgpa:9.5, year:"3rd Year" },
+    ]
+  },
+  {
+    college:"KLE Tech Univ – Sheshgiri Campus", abbr:"KLETU", color:"#00d4ff",
+    toppers:[
+      { name:"Priya Sharma",    branch:"ECE",   cgpa:9.4, year:"4th Year" },
+      { name:"Nandita Rao",     branch:"CSE",   cgpa:8.9, year:"3rd Year" },
+      { name:"Aditya Kulkarni", branch:"ME",    cgpa:8.6, year:"4th Year" },
+    ]
+  },
+  {
+    college:"Jain College of Engineering (JCE)", abbr:"JCE", color:"#06d6a0",
+    toppers:[
+      { name:"Ravi Gowda",      branch:"ME",    cgpa:9.0, year:"4th Year" },
+      { name:"Arjun Reddy",     branch:"CSE",   cgpa:8.9, year:"4th Year" },
+      { name:"Kavita Patil",    branch:"Civil", cgpa:8.5, year:"3rd Year" },
+    ]
+  },
+  {
+    college:"SG Balekundri Inst of Technology", abbr:"SGBIT", color:"#7b61ff",
+    toppers:[
+      { name:"Ananya Iyer",     branch:"CSE",   cgpa:9.2, year:"Alumni"   },
+      { name:"Deepak Kulkarni", branch:"ECE",   cgpa:9.3, year:"3rd Year" },
+      { name:"Rashmi Hosamani", branch:"CSE",   cgpa:8.8, year:"4th Year" },
+    ]
+  },
+  {
+    college:"Angadi Inst of Technology & Mgmt", abbr:"AITM", color:"#ef476f",
+    toppers:[
+      { name:"Pooja Kamble",    branch:"CSE",   cgpa:9.7, year:"3rd Year" },
+      { name:"Sneha Nair",      branch:"ECE",   cgpa:8.8, year:"3rd Year" },
+      { name:"Rahul Angadi",    branch:"ME",    cgpa:8.4, year:"4th Year" },
+    ]
+  },
+  {
+    college:"Maratha Mandal Engineering College", abbr:"MMEC", color:"#ffd166",
+    toppers:[
+      { name:"Suresh Babu",     branch:"ME",    cgpa:8.6, year:"4th Year" },
+      { name:"Ashwini Kadam",   branch:"CSE",   cgpa:8.3, year:"3rd Year" },
+      { name:"Vinod Patil",     branch:"ECE",   cgpa:8.1, year:"4th Year" },
+    ]
+  },
+  {
+    college:"Jain College of Engg & Research", abbr:"JCER", color:"#f0b429",
+    toppers:[
+      { name:"Vikram Singh",    branch:"CSE",   cgpa:8.8, year:"3rd Year" },
+      { name:"Prachi Jain",     branch:"ECE",   cgpa:8.5, year:"4th Year" },
+      { name:"Sandeep Nair",    branch:"ME",    cgpa:8.2, year:"3rd Year" },
+    ]
+  },
+  {
+    college:"Shaikh College of Engg & Technology", abbr:"SCET", color:"#00d4ff",
+    toppers:[
+      { name:"Meena Kumari",    branch:"Civil", cgpa:8.9, year:"4th Year" },
+      { name:"Azhar Shaikh",    branch:"ECE",   cgpa:8.4, year:"3rd Year" },
+      { name:"Farhan Ahmed",    branch:"CSE",   cgpa:8.2, year:"4th Year" },
+    ]
+  },
+  {
+    college:"VSM Institute of Technology", abbr:"VSMIT", color:"#06d6a0",
+    toppers:[
+      { name:"Arjun Reddy",     branch:"CSE",   cgpa:8.5, year:"4th Year" },
+      { name:"Namrata Patil",   branch:"ECE",   cgpa:8.2, year:"3rd Year" },
+      { name:"Sagar Mestri",    branch:"Civil", cgpa:7.9, year:"4th Year" },
+    ]
+  },
+  {
+    college:"Hirasugar Institute of Technology", abbr:"HIT", color:"#7b61ff",
+    toppers:[
+      { name:"Lakshmi Devi",    branch:"ECE",   cgpa:8.4, year:"4th Year" },
+      { name:"Prasad Hiremath", branch:"ME",    cgpa:8.1, year:"3rd Year" },
+      { name:"Geetanjali Kore", branch:"CSE",   cgpa:7.9, year:"4th Year" },
+    ]
+  },
+  {
+    college:"KLE CET Chikodi", abbr:"KLECT", color:"#ef476f",
+    toppers:[
+      { name:"Manjunath Kori",  branch:"ME",    cgpa:8.3, year:"4th Year" },
+      { name:"Shweta Patil",    branch:"CSE",   cgpa:8.0, year:"3rd Year" },
+      { name:"Basavaraja Naik", branch:"Civil", cgpa:7.8, year:"4th Year" },
+    ]
+  },
+  {
+    college:"Visvesvaraya Technological University", abbr:"VTU", color:"#ffd166",
+    toppers:[
+      { name:"Vikram Singh",    branch:"ECE",   cgpa:9.6, year:"Final Year" },
+      { name:"Rahul Patil",     branch:"Civil", cgpa:8.7, year:"3rd Year" },
+      { name:"Smita Bhat",      branch:"CSE",   cgpa:9.0, year:"4th Year" },
+    ]
+  },
+];
+
+/* ===================== TOPPERS RENDER ===================== */
+function renderDistrictPodium() {
+  const top3 = districtToppers.slice(0, 3);
+  // order: 2nd, 1st, 3rd for visual podium
+  const order = [top3[1], top3[0], top3[2]];
+  const medals = ['🥈','🥇','🥉'];
+  const baseLabels = ['2ND','1ST','3RD'];
+  const podium = document.getElementById('districtPodium');
+  podium.innerHTML = order.map((t, i) => {
+    const isTop = i === 1;
+    const initials = t.name.split(' ').map(n => n[0]).join('');
+    const borderColor = i===1 ? 'var(--gold)' : i===0 ? '#C0C0C0' : '#CD7F32';
+    return `
+      <div class="podium-slot">
+        <div class="podium-card">
+          ${isTop ? '<div class="podium-crown">👑</div>' : ''}
+          <div class="podium-avatar" style="background:${t.color}22;color:${t.color};border-color:${borderColor}">
+            ${initials}
+          </div>
+          <div class="podium-name">${t.name}</div>
+          <div class="podium-college">${t.collegeFull}</div>
+          <div class="podium-cgpa" style="color:${isTop?'var(--gold)':t.color}">${t.cgpa}</div>
+          <div class="podium-cgpa-label">CGPA</div>
+          <span class="podium-branch badge-tag" style="background:${t.color}18;color:${t.color};margin-top:10px">${t.branch}</span>
+        </div>
+        <div class="podium-base">${baseLabels[i]}</div>
+      </div>`;
+  }).join('');
+}
+
+function renderDistrictToppersList() {
+  const list = document.getElementById('districtToppersList');
+  list.innerHTML = districtToppers.map((t, i) => {
+    const initials = t.name.split(' ').map(n=>n[0]).join('');
+    const rankColor = i===0?'var(--gold)':i===1?'#C0C0C0':i===2?'#CD7F32':'var(--muted)';
+    const cgpaColor = t.cgpa>=9.5?'var(--green)':t.cgpa>=9.0?'var(--gold)':'var(--text)';
+    return `
+      <div style="display:grid;grid-template-columns:56px 1fr 180px 140px 100px 120px;gap:16px;padding:16px 24px;border-bottom:1px solid var(--border);align-items:center;transition:background 0.2s" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background=''">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:${rankColor}">${String(t.rank).padStart(2,'0')}</div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:40px;height:40px;border-radius:50%;background:${t.color}22;color:${t.color};display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:14px;flex-shrink:0">${initials}</div>
+          <div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px">${t.name}</div>
+            <div style="font-size:11px;color:var(--muted)">${t.year}</div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.4">${t.collegeFull}</div>
+        <div><span class="badge-tag badge-blue" style="font-size:11px">${t.branch}</span></div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:${cgpaColor}">${t.cgpa}</div>
+        <div style="font-size:11px;font-weight:600;color:${t.color}">${t.award}</div>
+      </div>`;
+  }).join('');
+}
+
+function buildTickerHTML(toppers) {
+  return toppers.map(t =>
+    `<div class="ticker-item">
+      <span class="ticker-rank">#${t.rank}</span>
+      <span class="ticker-name">${t.name}</span>
+      <span class="ticker-college">${t.college}</span>
+      <span class="ticker-cgpa">${t.cgpa}</span>
+    </div>
+    <span class="ticker-sep">·</span>`
+  ).join('');
+}
+
+function renderTicker() {
+  const track = document.getElementById('tickerTrack');
+  // duplicate for seamless loop
+  const html = buildTickerHTML(districtToppers);
+  track.innerHTML = html + html;
+}
+
+let currentTopperFilter = 'all';
+
+function filterCollegeToppers(btn, filter) {
+  document.querySelectorAll('#toppers .filter-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentTopperFilter = filter;
+  renderCollegeToppers(filter);
+}
+
+function renderCollegeToppers(filter) {
+  const branchMap = { cse:['CSE','ISE','AI/ML'], ece:['ECE','EEE'], me:['ME','Civil','Chemical'] };
+  const grid = document.getElementById('collegeTopperGrid');
+  const colors10 = ['#f0b429','#00d4ff','#06d6a0','#7b61ff','#ef476f','#ffd166','#f0b429','#00d4ff','#06d6a0','#ffd166','#ef476f','#7b61ff'];
+
+  grid.innerHTML = collegeToppers.map((ct, ci) => {
+    let toppers = ct.toppers;
+    if (filter !== 'all') {
+      toppers = toppers.filter(t => branchMap[filter] && branchMap[filter].includes(t.branch));
+    }
+    if (!toppers.length) toppers = ct.toppers.slice(0,1); // fallback show 1
+    const col = ct.color || colors10[ci];
+    const posColors = ['var(--gold)','#C0C0C0','#CD7F32'];
+    const posMedals = ['🥇','🥈','🥉'];
+
+    return `
+      <div class="college-topper-card" style="--card-col:${col}">
+        <style>.college-topper-card:nth-child(${ci+1})::after{background:${col};}</style>
+        <div class="ctc-college-badge">
+          <div class="ctc-college-logo" style="background:${col}22;color:${col}">${ct.abbr}</div>
+          <div class="ctc-college-name">${ct.college}</div>
+          <div class="ctc-rank-badge" style="background:${col}18;color:${col};border:1px solid ${col}40">2023-24</div>
+        </div>
+        ${toppers.map((t, ti) => {
+          const initials = t.name.split(' ').map(n=>n[0]).join('');
+          const cgpaColor = t.cgpa>=9.5?'var(--green)':t.cgpa>=9.0?'var(--gold)':col;
+          return `
+            <div class="ctc-topper-row">
+              <div class="ctc-pos" style="color:${posColors[ti]}">${posMedals[ti]||ti+1}</div>
+              <div class="ctc-avatar" style="background:${col}22;color:${col}">${initials}</div>
+              <div class="ctc-info">
+                <div class="ctc-name">${t.name}</div>
+                <div class="ctc-branch">${t.branch} · ${t.year}</div>
+              </div>
+              <div class="ctc-score">
+                <div class="ctc-cgpa" style="color:${cgpaColor}">${t.cgpa}</div>
+                <div class="ctc-year">CGPA</div>
+              </div>
+            </div>`;
+        }).join('')}
+      </div>`;
+  }).join('');
+}
+
+/* init toppers */
+renderDistrictPodium();
+renderDistrictToppersList();
+renderTicker();
+renderCollegeToppers('all');
+
+</script>
+</body>
+</html>
